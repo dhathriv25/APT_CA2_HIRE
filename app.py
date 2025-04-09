@@ -11,10 +11,6 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-# Set OTP_TEST_MODE to True if environment variable not set
-if 'OTP_TEST_MODE' not in os.environ:
-    os.environ['OTP_TEST_MODE'] = 'True'  # For demo/development
-
 # Initialize Flask app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hire-platform-secret-key'
@@ -102,7 +98,7 @@ def customer_register():
         db.session.add(customer)
         db.session.commit()
         
-        # Generate and send OTP via API
+        # Generate and send OTP via Twilio API
         otp_code, error = generate_otp(phone)
         
         if error:
@@ -125,11 +121,7 @@ def customer_register():
         session['temp_user_id'] = customer.id
         session['temp_user_type'] = 'customer'
         
-        # In test mode, display OTP for demo purposes
-        if os.environ.get('OTP_TEST_MODE') == 'True':
-            flash(f'Account created! Your verification code is: {otp_code}', 'success')
-        else:
-            flash(f'Account created! Verification code sent to {phone}', 'success')
+        flash('Account created! Verification code sent to your phone.', 'success')
         return redirect(url_for('verify_otp'))
     
     return render_template('customer/register.html')
@@ -168,7 +160,7 @@ def provider_register():
         db.session.add(provider)
         db.session.commit()
         
-        # Generate and send OTP via API
+        # Generate and send OTP via Twilio API
         otp_code, error = generate_otp(phone)
         
         if error:
@@ -191,11 +183,7 @@ def provider_register():
         session['temp_user_id'] = provider.id
         session['temp_user_type'] = 'provider'
         
-        # In test mode, display OTP for demo purposes
-        if os.environ.get('OTP_TEST_MODE') == 'True':
-            flash(f'Account created! Your verification code is: {otp_code}', 'success')
-        else:
-            flash(f'Account created! Verification code sent to {phone}', 'success')
+        flash('Account created! Verification code sent to your phone.', 'success')
         return redirect(url_for('verify_otp'))
     
     return render_template('provider/register.html')
@@ -229,8 +217,6 @@ def verify_otp():
                     # Log user in
                     session.pop('temp_user_id', None)
                     session.pop('temp_user_type', None)
-                    session.pop('otp_code', None)
-                    session.pop('otp_expiry', None)
                     session['user_id'] = user.id
                     session['user_type'] = 'customer'
                     
@@ -246,8 +232,6 @@ def verify_otp():
                     # Log user in
                     session.pop('temp_user_id', None)
                     session.pop('temp_user_type', None)
-                    session.pop('otp_code', None)
-                    session.pop('otp_expiry', None)
                     session['user_id'] = user.id
                     session['user_type'] = 'provider'
                     
