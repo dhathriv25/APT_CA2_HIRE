@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Access Forbidden{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8 text-center">
+        <div class="card shadow-sm">
+            <div class="card-body py-5">
+                <h1 class="display-1 text-warning mb-4">403</h1>
+                <h2 class="mb-4">Access Forbidden</h2>
+                <p class="lead mb-4">Sorry, you don't have permission to access this page.</p>
+                <div class="mb-4">
+                    <a href="{{ url_for('main.index') }}" class="btn btn-primary">Return to Home Page</a>
+                    {% if not session.get('user_id') %}
+                    <a href="{{ url_for('customer.login') }}" class="btn btn-outline-primary ms-2">Login</a>
+                    {% endif %}
+                </div>
+                <p class="text-muted small">If you believe this is an error, please contact support.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
