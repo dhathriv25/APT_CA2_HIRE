@@ -150,31 +150,95 @@ def find_matching_providers(customer_address, service_category_id, limit=5):
     # Return the top matching providers
     return [p[0] for p in provider_scores[:limit]]
 
-def verify_otp(entered_otp, stored_otp, expiry_time_str):
+def generate_otp(phone_number):
     """
-    Verify OTP code
+    Generate and send OTP via Twilio API
     
     Args:
+        phone_number: User's phone number
+        
+    Returns:
+        (otp_code, error) tuple
+        otp_code: Generated OTP code if successful, None otherwise
+        error: Error message if OTP sending failed, None otherwise
+    """
+    from twilio.rest import Client
+    from twilio.base.exceptions import TwilioRestException
+    import os
+    import random
+    
+    # Generate 6-digit OTP
+    otp_code = ''.join(random.choices('0123456789', k=6))
+    
+    # Get Twilio credentials from environment variables
+    account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
+    auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
+    twilio_number = os.environ.get('TWILIO_PHONE_NUMBER')
+    
+    if not account_sid or not auth_token or not twilio_number:
+        return None, "Twilio credentials not properly configured"
+    
+    try:
+        # Format phone number to E.164 format if not already
+        if not phone_number.startswith('+'):
+            phone_number = '+' + phone_number
+            
+        # Initialize Twilio client
+        client = Client(account_sid, auth_token)
+        
+        # Send OTP via SMS
+        message = client.messages.create(
+            body=f"Your HIRE Platform verification code is: {otp_code}",
+            from_=twilio_number,
+            to=phone_number
+        )
+        
+        return otp_code, None
+    
+    except TwilioRestException as e:
+        return None, f"Error sending OTP: {str(e)}"
+    except Exception as e:
+        return None, f"Unexpected error: {str(e)}"
+
+def verify_otp(user_id, entered_otp, user_type='customer'):
+    """
+    Verify OTP code from database
+    
+    Args:
+        user_id: User ID
         entered_otp: OTP entered by user
-        stored_otp: OTP stored in session
-        expiry_time_str: OTP expiry time as string
+        user_type: Type of user ('customer' or 'provider')
         
     Returns:
         True if OTP is valid, False otherwise
     """
-    if not entered_otp or not stored_otp or not expiry_time_str:
+    from models import OTPVerification
+    from datetime import datetime
+    
+    if not entered_otp or not user_id:
+        return False
+    
+    # Get the latest OTP for this user
+    otp_record = OTPVerification.query.filter_by(
+        user_id=user_id,
+        user_type=user_type,
+        is_used=False
+    ).order_by(OTPVerification.created_at.desc()).first()
+    
+    if not otp_record:
         return False
     
     # Check if OTP matches
-    if entered_otp != stored_otp:
+    if entered_otp != otp_record.otp_code:
         return False
     
     # Check if OTP is expired
-    try:
-        expiry_time = datetime.strptime(expiry_time_str, '%Y-%m-%d %H:%M:%S')
-        if datetime.utcnow() > expiry_time:
-            return False
-    except:
+    if datetime.utcnow() > otp_record.expires_at:
         return False
+    
+    # Mark OTP as used
+    otp_record.is_used = True
+    from app import db
+    db.session.commit()
     
     return True
