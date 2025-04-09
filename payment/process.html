@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}Payment{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Payment</h2>
+        <p class="text-muted">Complete your payment to confirm the booking</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('booking_detail', booking_id=booking.id) }}" class="btn btn-outline-secondary">Back to Booking</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Payment Details</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('payment_process', booking_id=booking.id) }}" method="post" id="payment-form">
+                    <div class="mb-3">
+                        <label for="payment_method" class="form-label">Payment Method</label>
+                        <select class="form-select" id="payment_method" name="payment_method" required>
+                            <option value="" selected disabled>Select payment method</option>
+                            <option value="credit_card">Credit Card</option>
+                            <option value="debit_card">Debit Card</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="bank_transfer">Bank Transfer</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Credit/Debit Card Form (will show/hide based on selection) -->
+                    <div id="card-details" style="display: none;">
+                        <div class="mb-3">
+                            <label for="card_number" class="form-label">Card Number</label>
+                            <input type="text" class="form-control" id="card_number" placeholder="1234 5678 9012 3456" maxlength="19" pattern="[0-9 ]{13,19}">
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="expiry_date" class="form-label">Expiry Date</label>
+                                <input type="text" class="form-control" id="expiry_date" placeholder="MM/YY" maxlength="5" pattern="[0-9]{2}/[0-9]{2}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cvv" class="form-label">CVV</label>
+                                <input type="text" class="form-control" id="cvv" placeholder="123" maxlength="3" pattern="[0-9]{3}">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="card_name" class="form-label">Name on Card</label>
+                            <input type="text" class="form-control" id="card_name" placeholder="John Doe">
+                        </div>
+                    </div>
+                    
+                    <!-- PayPal Info (will show/hide based on selection) -->
+                    <div id="paypal-info" style="display: none;">
+                        <div class="alert alert-info">
+                            <p class="mb-0">You will be redirected to PayPal to complete your payment.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Bank Transfer Info (will show/hide based on selection) -->
+                    <div id="bank-info" style="display: none;">
+                        <div class="alert alert-info">
+                            <p class="mb-0">Please use the following details to make a bank transfer:</p>
+                            <p class="mb-0">Bank: Demo Bank</p>
+                            <p class="mb-0">Account Name: HIRE Platform</p>
+                            <p class="mb-0">Account Number: 1234567890</p>
+                            <p class="mb-0">Reference: Booking #{{ booking.id }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning">
+                        <p class="mb-0"><strong>Note:</strong> This is a demo payment page. No actual payment will be processed.</p>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Complete Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Order Summary</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Service:</strong> {{ booking.category.name }}</p>
+                <p><strong>Provider:</strong> {{ booking.provider.get_full_name() }}</p>
+                <p><strong>Date & Time:</strong> {{ booking.booking_date.strftime('%d %b, %Y') }} | {{ booking.time_slot }}</p>
+                <p><strong>Location:</strong> {{ booking.address.get_full_address() }}</p>
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <span><strong>Amount:</strong></span>
+                    <span>${{ amount }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Show/hide payment details based on selection
+    document.getElementById('payment_method').addEventListener('change', function() {
+        const cardDetails = document.getElementById('card-details');
+        const paypalInfo = document.getElementById('paypal-info');
+        const bankInfo = document.getElementById('bank-info');
+        
+        // Hide all payment method specific sections
+        cardDetails.style.display = 'none';
+        paypalInfo.style.display = 'none';
+        bankInfo.style.display = 'none';
+        
+        // Show the selected payment method section
+        if (this.value === 'credit_card' || this.value === 'debit_card') {
+            cardDetails.style.display = 'block';
+        } else if (this.value === 'paypal') {
+            paypalInfo.style.display = 'block';
+        } else if (this.value === 'bank_transfer') {
+            bankInfo.style.display = 'block';
+        }
+    });
+    
+    // Format credit card number with spaces
+    document.getElementById('card_number').addEventListener('input', function(e) {
+        let value = this.value.replace(/\D/g, '');
+        let formattedValue = '';
+        
+        for (let i = 0; i < value.length; i++) {
+            if (i > 0 && i % 4 === 0) {
+                formattedValue += ' ';
+            }
+            formattedValue += value[i];
+        }
+        
+        this.value = formattedValue;
+    });
+    
+    // Format expiry date with slash
+    document.getElementById('expiry_date').addEventListener('input', function(e) {
+        let value = this.value.replace(/\D/g, '');
+        
+        if (value.length > 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        }
+        
+        this.value = value;
+    });
+</script>
+{% endblock %}
+{% endblock %}

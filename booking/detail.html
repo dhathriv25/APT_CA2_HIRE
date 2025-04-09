@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+
+{% block title %}Booking Details{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Booking #{{ booking.id }}</h2>
+        <p class="text-muted">View your booking details and status</p>
+    </div>
+    <div class="col-md-4 text-end">
+        {% if session.get('user_type') == 'customer' %}
+            <a href="{{ url_for('customer_dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+        {% elif session.get('user_type') == 'provider' %}
+            <a href="{{ url_for('provider_dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Booking Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <p class="text-muted mb-0">Booking ID</p>
+                        <p class="fw-bold">#{{ booking.id }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="text-muted mb-0">Status</p>
+                        <p class="fw-bold">
+                            {% if booking.status == 'pending' %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% elif booking.status == 'confirmed' %}
+                                <span class="badge bg-primary">Confirmed</span>
+                            {% elif booking.status == 'completed' %}
+                                <span class="badge bg-success">Completed</span>
+                            {% elif booking.status == 'cancelled' %}
+                                <span class="badge bg-danger">Cancelled</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="text-muted mb-0">Created On</p>
+                        <p class="fw-bold">{{ booking.created_at.strftime('%d %b, %Y %H:%M') }}</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <p class="text-muted mb-0">Service</p>
+                        <p class="fw-bold">{{ booking.category.name }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="text-muted mb-0">Date</p>
+                        <p class="fw-bold">{{ booking.booking_date.strftime('%d %b, %Y') }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="text-muted mb-0">Time Slot</p>
+                        <p class="fw-bold">{{ booking.time_slot }}</p>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <p class="text-muted mb-0">Address</p>
+                        <p class="fw-bold">{{ booking.address.get_full_address() }}</p>
+                    </div>
+                </div>
+                
+                {% if booking.payment %}
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <p class="text-muted mb-0">Payment Status</p>
+                            <p class="fw-bold">
+                                {% if booking.payment.status == 'pending' %}
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                {% elif booking.payment.status == 'successful' %}
+                                    <span class="badge bg-success">Paid</span>
+                                {% elif booking.payment.status == 'failed' %}
+                                    <span class="badge bg-danger">Failed</span>
+                                {% elif booking.payment.status == 'refunded' %}
+                                    <span class="badge bg-info">Refunded</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="text-muted mb-0">Payment Method</p>
+                            <p class="fw-bold">{{ booking.payment.payment_method|replace('_', ' ')|title }}</p>
+                        </div>
+                        <div class="col-md-4">
+                            <p class="text-muted mb-0">Amount</p>
+                            <p class="fw-bold">${{ booking.payment.amount }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if booking.status in ['pending', 'confirmed'] %}
+                    <div class="d-flex justify-content-end mt-3">
+                        <form action="{{ url_for('cancel_booking', booking_id=booking.id) }}" method="post" onsubmit="return confirm('Are you sure you want to cancel this booking?');" class="me-2">
+                            <button type="submit" class="btn btn-danger">Cancel Booking</button>
+                        </form>
+                        
+                        {% if booking.status == 'pending' and not booking.payment and session.get('user_type') == 'customer' %}
+                            <a href="{{ url_for('payment_process', booking_id=booking.id) }}" class="btn btn-primary">Pay Now</a>
+                        {% endif %}
+                        
+                        {% if booking.status == 'confirmed' and session.get('user_type') == 'provider' %}
+                            <form action="{{ url_for('complete_booking', booking_id=booking.id) }}" method="post" onsubmit="return confirm('Are you sure this service has been completed?');">
+                                <button type="submit" class="btn btn-success">Mark as Completed</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if booking.status == 'completed' and not booking.rating and session.get('user_type') == 'customer' %}
+            <div class="card" id="rate">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Rate this Service</h5>
+                </div>
+                <div class="card-body">
+                    <form action="{{ url_for('rate_booking', booking_id=booking.id) }}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Rating</label>
+                            <div class="rating">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="rating" id="rating1" value="1" required>
+                                    <label class="form-check-label" for="rating1">1 ★</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="rating" id="rating2" value="2">
+                                    <label class="form-check-label" for="rating2">2 ★</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="rating" id="rating3" value="3">
+                                    <label class="form-check-label" for="rating3">3 ★</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="rating" id="rating4" value="4">
+                                    <label class="form-check-label" for="rating4">4 ★</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="rating" id="rating5" value="5">
+                                    <label class="form-check-label" for="rating5">5 ★</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">Comment (Optional)</label>
+                            <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Rating</button>
+                    </form>
+                </div>
+            </div>
+        {% elif booking.rating and session.get('user_type') == 'customer' %}
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Your Rating</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <p class="text-muted mb-0">Rating</p>
+                        <p class="fw-bold">
+                            {% for i in range(5) %}
+                                {% if i < booking.rating %}
+                                    <span class="text-warning">★</span>
+                                {% else %}
+                                    <span class="text-secondary">★</span>
+                                {% endif %}
+                            {% endfor %}
+                            ({{ booking.rating }}/5)
+                        </p>
+                    </div>
+                    {% if booking.rating_comment %}
+                        <div class="mb-0">
+                            <p class="text-muted mb-0">Comment</p>
+                            <p class="fw-bold">{{ booking.rating_comment }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="col-md-4">
+        {% if session.get('user_type') == 'customer' %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Provider Information</h5>
+                </div>
+                <div class="card-body">
+                    <h5>{{ booking.provider.get_full_name() }}</h5>
+                    <p class="mb-1"><strong>Experience:</strong> {{ booking.provider.experience_years }} years</p>
+                    <p class="mb-3">
+                        <strong>Rating:</strong> 
+                        {% if booking.provider.avg_rating %}
+                            {% for i in range(5) %}
+                                {% if i < booking.provider.avg_rating|int %}
+                                    <span class="text-warning">★</span>
+                                {% elif i < booking.provider.avg_rating|round(0, 'ceil')|int and (booking.provider.avg_rating % 1) >= 0.5 %}
+                                    <span class="text-warning">★</span>
+                                {% else %}
+                                    <span class="text-secondary">★</span>
+                                {% endif %}
+                            {% endfor %}
+                            ({{ booking.provider.avg_rating }})
+                        {% else %}
+                            No ratings yet
+                        {% endif %}
+                    </p>
+                    <p class="mb-0"><strong>Contact:</strong> {{ booking.provider.phone }}</p>
+                </div>
+            </div>
+        {% elif session.get('user_type') == 'provider' %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Customer Information</h5>
+                </div>
+                <div class="card-body">
+                    <h5>{{ booking.customer.get_full_name() }}</h5>
+                    <p class="mb-0"><strong>Contact:</strong> {{ booking.customer.phone }}</p>
+                </div>
+            </div>
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Booking Status Information</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Pending
+                        <span class="badge bg-warning text-dark rounded-pill">Awaiting payment</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Confirmed
+                        <span class="badge bg-primary rounded-pill">Payment successful</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Completed
+                        <span class="badge bg-success rounded-pill">Service done</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        Cancelled
+                        <span class="badge bg-danger rounded-pill">Booking cancelled</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

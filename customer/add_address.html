@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Add Address{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Add New Address</h4>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('add_address') }}" method="post">
+                    <div class="mb-3">
+                        <label for="address_line" class="form-label">Address Line</label>
+                        <input type="text" class="form-control" id="address_line" name="address_line" required>
+                        <div class="form-text">Street address, building, apartment number</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-5">
+                            <label for="city" class="form-label">City</label>
+                            <input type="text" class="form-control" id="city" name="city" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="state" class="form-label">State/Province</label>
+                            <input type="text" class="form-control" id="state" name="state" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="postal_code" class="form-label">Postal Code</label>
+                            <input type="text" class="form-control" id="postal_code" name="postal_code" required>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Save Address</button>
+                        <a href="{{ url_for('customer_dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

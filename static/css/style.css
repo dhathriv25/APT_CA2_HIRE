@@ -1,0 +1,139 @@
+/* Custom styles for HIRE Platform */
+
+/* Global Styles */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+footer {
+    margin-top: auto;
+}
+
+/* Card Styles */
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Buttons */
+.btn {
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background-color: #4e73df;
+    border-color: #4e73df;
+}
+
+.btn-primary:hover {
+    background-color: #2e59d9;
+    border-color: #2653d4;
+}
+
+/* Form Styles */
+.form-control:focus, .form-select:focus {
+    border-color: #bac8f3;
+    box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+}
+
+/* Rating Stars */
+.rating .form-check-input:checked ~ .form-check-label {
+    color: #ffc107;
+}
+
+/* Status Badges */
+.status-pending {
+    background-color: #f6c23e;
+}
+
+.status-confirmed {
+    background-color: #4e73df;
+}
+
+.status-completed {
+    background-color: #1cc88a;
+}
+
+.status-cancelled {
+    background-color: #e74a3b;
+}
+
+/* Header Shadow */
+.navbar {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+/* Service Categories */
+.service-card {
+    transition: all 0.3s ease;
+}
+
+.service-card:hover {
+    border-color: #4e73df;
+}
+
+/* Dashboard sidebar */
+.list-group-item.active {
+    background-color: #4e73df;
+    border-color: #4e73df;
+}
+
+/* Provider cards */
+.provider-rating {
+    color: #f6c23e;
+}
+
+/* Booking timeline */
+.booking-timeline .timeline-item {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+.booking-timeline .timeline-item:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: #4e73df;
+}
+
+.booking-timeline .timeline-item:after {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 1rem;
+    width: 2px;
+    height: calc(100% + 1rem);
+    background-color: #e3e6f0;
+}
+
+.booking-timeline .timeline-item:last-child:after {
+    display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .card-title {
+        font-size: 1.1rem;
+    }
+    
+    .btn-group-sm > .btn, .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}

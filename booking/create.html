@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Book Service{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Book Service with {{ provider.get_full_name() }}</h2>
+        <p class="text-muted">Complete the booking form below</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('service_list') }}" class="btn btn-outline-secondary">Back to Services</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Booking Details</h5>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('create_booking', provider_id=provider.id) }}" method="post">
+                    <div class="mb-3">
+                        <label for="category_id" class="form-label">Service</label>
+                        <select class="form-select" id="category_id" name="category_id" required>
+                            <option value="" selected disabled>Select a service</option>
+                            {% for pc in provider_categories %}
+                                <option value="{{ pc.category_id }}" {% if request.args.get('category_id')|int == pc.category_id %}selected{% endif %}>
+                                    {{ pc.category.name }} - ${{ pc.price_rate }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address_id" class="form-label">Service Address</label>
+                        <select class="form-select" id="address_id" name="address_id" required>
+                            <option value="" selected disabled>Select an address</option>
+                            {% for address in addresses %}
+                                <option value="{{ address.id }}">{{ address.get_full_address() }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="booking_date" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="booking_date" name="booking_date" required
+                                  min="{{ min_date.strftime('%Y-%m-%d') }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="time_slot" class="form-label">Time Slot</label>
+                            <select class="form-select" id="time_slot" name="time_slot" required>
+                                <option value="" selected disabled>Select a time slot</option>
+                                {% for slot in time_slots %}
+                                    <option value="{{ slot }}">{{ slot }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Continue to Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Provider Information</h5>
+            </div>
+            <div class="card-body">
+                <h5>{{ provider.get_full_name() }}</h5>
+                <p class="mb-1"><strong>Experience:</strong> {{ provider.experience_years }} years</p>
+                <p class="mb-3">
+                    <strong>Rating:</strong> 
+                    {% if provider.avg_rating %}
+                        {% for i in range(5) %}
+                            {% if i < provider.avg_rating|int %}
+                                <span class="text-warning">★</span>
+                            {% elif i < provider.avg_rating|round(0, 'ceil')|int and (provider.avg_rating % 1) >= 0.5 %}
+                                <span class="text-warning">★</span>
+                            {% else %}
+                                <span class="text-secondary">★</span>
+                            {% endif %}
+                        {% endfor %}
+                        ({{ provider.avg_rating }})
+                    {% else %}
+                        No ratings yet
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Booking Information</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-1"><strong>Booking Process:</strong></p>
+                <ol class="ps-3">
+                    <li>Fill in the booking details</li>
+                    <li>Proceed to payment</li>
+                    <li>Receive confirmation</li>
+                    <li>Provider will arrive at the scheduled time</li>
+                </ol>
+                <p class="mb-0 text-muted small">Note: You can cancel bookings up to 24 hours before the scheduled time.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

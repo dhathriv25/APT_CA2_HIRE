@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>{{ category.name }}</h2>
+        <p class="text-muted">{{ category.description }}</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('service_list') }}" class="btn btn-outline-secondary">Back to Services</a>
+    </div>
+</div>
+
+{% if user and session.get('user_type') == 'customer' %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title">Find {{ category.name }} providers near you</h5>
+                <form action="{{ url_for('search_providers') }}" method="get" class="row g-3">
+                    <input type="hidden" name="category_id" value="{{ category.id }}">
+                    <div class="col-md-8">
+                        <label for="address_id" class="form-label">Your Address</label>
+                        <select class="form-select" id="address_id" name="address_id">
+                            <option value="" selected>Any location</option>
+                            {% for address in user.addresses %}
+                                <option value="{{ address.id }}">{{ address.get_full_address() }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if providers %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3>Available Providers</h3>
+        </div>
+    </div>
+    
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for provider in providers %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ provider.get_full_name() }}</h5>
+                        <p class="card-text mb-1">
+                            <strong>Experience:</strong> {{ provider.experience_years }} years
+                        </p>
+                        <p class="card-text mb-3">
+                            <strong>Rating:</strong> 
+                            {% if provider.avg_rating %}
+                                {% for i in range(5) %}
+                                    {% if i < provider.avg_rating|int %}
+                                        <span class="text-warning">★</span>
+                                    {% elif i < provider.avg_rating|round(0, 'ceil')|int and (provider.avg_rating % 1) >= 0.5 %}
+                                        <span class="text-warning">★</span>
+                                    {% else %}
+                                        <span class="text-secondary">★</span>
+                                    {% endif %}
+                                {% endfor %}
+                                ({{ provider.avg_rating }})
+                            {% else %}
+                                No ratings yet
+                            {% endif %}
+                        </p>
+                        
+                        {% set provider_service = provider.services|selectattr('category_id', 'equalto', category.id)|first %}
+                        {% if provider_service %}
+                            <p class="card-text">
+                                <strong>Price:</strong> ${{ provider_service.price_rate }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        {% if user and session.get('user_type') == 'customer' %}
+                            <a href="{{ url_for('create_booking', provider_id=provider.id) }}?category_id={{ category.id }}" class="btn btn-primary">Book Now</a>
+                        {% else %}
+                            <a href="{{ url_for('customer_login') }}" class="btn btn-outline-primary">Login to Book</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <p class="mb-0">No providers available for this service category at the moment.</p>
+    </div>
+{% endif %}
+{% endblock %}

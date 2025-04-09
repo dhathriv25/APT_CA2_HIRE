@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Search Results for {{ category.name }}</h2>
+        <p class="text-muted">Found {{ providers|length }} service providers</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('service_list') }}" class="btn btn-outline-secondary">Back to Services</a>
+    </div>
+</div>
+
+{% if providers %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for provider in providers %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ provider.get_full_name() }}</h5>
+                        <p class="card-text mb-1">
+                            <strong>Experience:</strong> {{ provider.experience_years }} years
+                        </p>
+                        <p class="card-text mb-3">
+                            <strong>Rating:</strong> 
+                            {% if provider.avg_rating %}
+                                {% for i in range(5) %}
+                                    {% if i < provider.avg_rating|int %}
+                                        <span class="text-warning">★</span>
+                                    {% elif i < provider.avg_rating|round(0, 'ceil')|int and (provider.avg_rating % 1) >= 0.5 %}
+                                        <span class="text-warning">★</span>
+                                    {% else %}
+                                        <span class="text-secondary">★</span>
+                                    {% endif %}
+                                {% endfor %}
+                                ({{ provider.avg_rating }})
+                            {% else %}
+                                No ratings yet
+                            {% endif %}
+                        </p>
+                        
+                        {% set provider_service = provider.services|selectattr('category_id', 'equalto', category.id)|first %}
+                        {% if provider_service %}
+                            <p class="card-text">
+                                <strong>Price:</strong> ${{ provider_service.price_rate }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        {% if user and session.get('user_type') == 'customer' %}
+                            <a href="{{ url_for('create_booking', provider_id=provider.id) }}?category_id={{ category.id }}" class="btn btn-primary">Book Now</a>
+                        {% else %}
+                            <a href="{{ url_for('customer_login') }}" class="btn btn-outline-primary">Login to Book</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <p class="mb-0">No providers found for this service category. Please try a different category or check back later.</p>
+    </div>
+{% endif %}
+{% endblock %}
