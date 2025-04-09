@@ -6,6 +6,14 @@ from datetime import datetime, timedelta
 import random
 import math
 import requests
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Set OTP_TEST_MODE to True if environment variable not set
+if 'OTP_TEST_MODE' not in os.environ:
+    os.environ['OTP_TEST_MODE'] = 'True'  # For demo/development
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -17,10 +25,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Import models after initializing db
-from models import Customer, Provider, ServiceCategory, ProviderCategory, Address, Booking, Payment
+from models import Customer, Provider, ServiceCategory, ProviderCategory, Address, Booking, Payment, OTPVerification
 
 # Import services
-from services import find_matching_providers, calculate_distance, verify_otp
+from services import find_matching_providers, calculate_distance, verify_otp, generate_otp
 
 # Create database tables
 @app.before_first_request
@@ -94,15 +102,34 @@ def customer_register():
         db.session.add(customer)
         db.session.commit()
         
-        # Generate and "send" OTP (we'll just display it for demo purposes)
-        otp_code = ''.join(random.choices('0123456789', k=6))
+        # Generate and send OTP via API
+        otp_code, error = generate_otp(phone)
+        
+        if error:
+            flash(f'Account created but failed to send OTP: {error}', 'warning')
+            db.session.delete(customer)
+            db.session.commit()
+            return render_template('customer/register.html')
+            
+        # Create OTP record
         otp_expiry = datetime.utcnow() + timedelta(minutes=10)
-        session['otp_code'] = otp_code
-        session['otp_expiry'] = otp_expiry.strftime('%Y-%m-%d %H:%M:%S')
+        otp_verification = OTPVerification(
+            user_id=customer.id,
+            user_type='customer',
+            otp_code=otp_code,
+            expires_at=otp_expiry
+        )
+        db.session.add(otp_verification)
+        db.session.commit()
+        
         session['temp_user_id'] = customer.id
         session['temp_user_type'] = 'customer'
         
-        flash(f'Account created! Your verification code is: {otp_code}', 'success')
+        # In test mode, display OTP for demo purposes
+        if os.environ.get('OTP_TEST_MODE') == 'True':
+            flash(f'Account created! Your verification code is: {otp_code}', 'success')
+        else:
+            flash(f'Account created! Verification code sent to {phone}', 'success')
         return redirect(url_for('verify_otp'))
     
     return render_template('customer/register.html')
@@ -141,15 +168,34 @@ def provider_register():
         db.session.add(provider)
         db.session.commit()
         
-        # Generate and "send" OTP (we'll just display it for demo purposes)
-        otp_code = ''.join(random.choices('0123456789', k=6))
+        # Generate and send OTP via API
+        otp_code, error = generate_otp(phone)
+        
+        if error:
+            flash(f'Account created but failed to send OTP: {error}', 'warning')
+            db.session.delete(provider)
+            db.session.commit()
+            return render_template('provider/register.html')
+            
+        # Create OTP record
         otp_expiry = datetime.utcnow() + timedelta(minutes=10)
-        session['otp_code'] = otp_code
-        session['otp_expiry'] = otp_expiry.strftime('%Y-%m-%d %H:%M:%S')
+        otp_verification = OTPVerification(
+            user_id=provider.id,
+            user_type='provider',
+            otp_code=otp_code,
+            expires_at=otp_expiry
+        )
+        db.session.add(otp_verification)
+        db.session.commit()
+        
         session['temp_user_id'] = provider.id
         session['temp_user_type'] = 'provider'
         
-        flash(f'Account created! Your verification code is: {otp_code}', 'success')
+        # In test mode, display OTP for demo purposes
+        if os.environ.get('OTP_TEST_MODE') == 'True':
+            flash(f'Account created! Your verification code is: {otp_code}', 'success')
+        else:
+            flash(f'Account created! Verification code sent to {phone}', 'success')
         return redirect(url_for('verify_otp'))
     
     return render_template('provider/register.html')
@@ -171,8 +217,8 @@ def verify_otp():
             flash('Please enter the verification code', 'danger')
             return render_template('verify_otp.html')
         
-        # Verify OTP (this is a simplified implementation)
-        if verify_otp(entered_otp, session.get('otp_code'), session.get('otp_expiry')):
+        # Verify OTP using the database record
+        if verify_otp(session.get('temp_user_id'), entered_otp, session.get('temp_user_type')):
             # Mark user as verified
             if user_type == 'customer':
                 user = Customer.query.get(user_id)
