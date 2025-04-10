@@ -1,0 +1,39 @@
+2025-04-10 18:12:45,309 ERROR: Exception on /customer/register [POST] [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py:875]
+Traceback (most recent call last):
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\routes.py", line 215, in register
+    return redirect(url_for('main.verify_otp'))
+                    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\helpers.py", line 232, in url_for
+    return current_app.url_for(
+           ~~~~~~~~~~~~~~~~~~~^
+        endpoint,
+        ^^^^^^^^^
+    ...<4 lines>...
+        **values,
+        ^^^^^^^^^
+    )
+    ^
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'main.verify_otp'. Did you mean 'main.verify_otp_route' instead?
+2025-04-10 18:12:45,330 ERROR: 500 error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:89]
+2025-04-10 18:21:55,502 INFO: HIRE Platform startup [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:32]
+2025-04-10 18:21:55,534 INFO: Creating database tables [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:44]

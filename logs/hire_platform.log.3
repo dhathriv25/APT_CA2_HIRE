@@ -1,4 +1,4 @@
-2025-04-10 18:26:48,319 ERROR: Exception on /customer/register [POST] [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py:875]
+2025-04-10 18:25:28,004 ERROR: Exception on /customer/register [POST] [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py:875]
 Traceback (most recent call last):
   File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
     self.dialect.do_execute(
@@ -133,6 +133,8 @@ Traceback (most recent call last):
     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
 sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: customers.phone
 [SQL: INSERT INTO customers (email, phone, password_hash, first_name, last_name, is_verified, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)]
-[parameters: ('dummy2@gmail.com', '0894823342', 'scrypt:32768:8:1$KLe1IianwPOEGfQx$f7b1110017224ae2aef3e33af615857b1935ae30680c266a56ef4bcaf51fa8c957c9c61f84dd329c7d21a260dfe6906e18510fa88a6e6043f6accb927a84abfa', 'dummy2', 'dummy', 0, '2025-04-10 17:26:48.318009')]
+[parameters: ('dummy1@gmail.com', '0894823342', 'scrypt:32768:8:1$7qeiCAaBGsuknn0v$c3a0870eeb9607996263fad3fbaf89ccee69120fe903624835ddd1d0525398091595b97ae0bf2706b39be5e8f4fb4da3866a7571ded5afcb8f8245922b2c9baa', 'Anish', 'Dummy', 0, '2025-04-10 17:25:28.003850')]
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
-2025-04-10 18:26:48,344 ERROR: 500 error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:89]
+2025-04-10 18:25:28,027 ERROR: 500 error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:89]
+2025-04-10 18:26:11,528 INFO: HIRE Platform startup [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:32]
+2025-04-10 18:26:11,553 INFO: Creating database tables [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:44]

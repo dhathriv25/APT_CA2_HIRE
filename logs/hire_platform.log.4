@@ -1,4 +1,4 @@
-2025-04-10 18:26:48,319 ERROR: Exception on /customer/register [POST] [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py:875]
+2025-04-10 18:24:50,101 ERROR: Exception on /customer/register [POST] [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py:875]
 Traceback (most recent call last):
   File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1964, in _exec_single_context
     self.dialect.do_execute(
@@ -133,6 +133,6 @@ Traceback (most recent call last):
     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
 sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: customers.phone
 [SQL: INSERT INTO customers (email, phone, password_hash, first_name, last_name, is_verified, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)]
-[parameters: ('dummy2@gmail.com', '0894823342', 'scrypt:32768:8:1$KLe1IianwPOEGfQx$f7b1110017224ae2aef3e33af615857b1935ae30680c266a56ef4bcaf51fa8c957c9c61f84dd329c7d21a260dfe6906e18510fa88a6e6043f6accb927a84abfa', 'dummy2', 'dummy', 0, '2025-04-10 17:26:48.318009')]
+[parameters: ('dummy.duummy@gmail.com', '0894823342', 'scrypt:32768:8:1$Nl5WSZCZleZ8VaJM$e81147fe3dfecc7b09b8cb77b1f934c42123bd781027fa7f42bacd5a6436811f9d462783e1a2e6b1073bac736d2db2492c6d22ce91130198fd4e9130066a1b37', 'dummy', 'dummy', 0, '2025-04-10 17:24:50.100349')]
 (Background on this error at: https://sqlalche.me/e/20/gkpj)
-2025-04-10 18:26:48,344 ERROR: 500 error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:89]
+2025-04-10 18:24:50,122 ERROR: 500 error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:89]

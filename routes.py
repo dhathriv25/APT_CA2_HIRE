@@ -48,7 +48,7 @@ def index():
     return render_template('index.html', categories=categories, top_providers=top_providers, user=get_current_user())
 
 @main_bp.route('/verify-otp', methods=['GET', 'POST'])
-def verify_otp_route():
+def verify_otp():
     """OTP verification"""
     if 'temp_user_id' not in session or 'temp_user_type' not in session:
         flash('Please register first', 'warning')
@@ -62,7 +62,7 @@ def verify_otp_route():
         
         if not entered_otp:
             flash('Please enter the verification code', 'danger')
-            return render_template('verify_otp.html')
+            return render_template('main.verify_otp.html')
         
         # Verify OTP using the database record
         if verify_otp(user_id, entered_otp, user_type):

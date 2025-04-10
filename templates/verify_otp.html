@@ -13,7 +13,7 @@
                 <div class="alert alert-info">
                     <p class="mb-0">A verification code has been sent to your phone. Please enter it below to complete your registration.</p>
                 </div>
-                <form action="{{ url_for('verify_otp') }}" method="post">
+                <form action="{{ url_for('main.verify_otp') }}" method="post">
                     <div class="mb-4">
                         <label for="otp_code" class="form-label">Verification Code</label>
                         <input type="text" class="form-control form-control-lg text-center" id="otp_code" name="otp_code" 
