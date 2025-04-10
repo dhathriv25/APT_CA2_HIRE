@@ -1,5 +1,5 @@
 from datetime import datetime
-from db_setup import db 
+from app import db
 
 class Customer(db.Model):
     """Customer model"""

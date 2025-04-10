@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 import logging
 from logging.handlers import RotatingFileHandler
-from db_setup import app, db
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -14,6 +13,10 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'hire-platform-secret-key')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI', 'sqlite:///hire.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Initialize SQLAlchemy
+db = SQLAlchemy()
+db.init_app(app)
 
 # Configure logging
 if not os.path.exists('logs'):
@@ -29,33 +32,34 @@ app.logger.addHandler(file_handler)
 app.logger.setLevel(logging.INFO)
 app.logger.info('HIRE Platform startup')
 
-# Initialize SQLAlchemy
-db = SQLAlchemy(app)
-
 # Import models after initializing db
 from models import Customer, Provider, ServiceCategory, ProviderCategory, Address, Booking, Payment, OTPVerification
 
-# Create database tables
-@app.before_first_request
-def create_tables():
+# Function to initialize database
+def init_db():
+    """Create database tables and add initial data"""
     app.logger.info('Creating database tables')
-    db.create_all()
-    
-    # Add initial service categories if none exist
-    if ServiceCategory.query.count() == 0:
-        app.logger.info('Adding initial service categories')
-        categories = [
-            ServiceCategory(name="Plumbing", description="All plumbing services including repairs, installations, and maintenance"),
-            ServiceCategory(name="Electrical", description="Electrical repairs, installations, and maintenance services"),
-            ServiceCategory(name="Cleaning", description="Professional home cleaning services including regular cleaning, deep cleaning, and specialized cleaning"),
-            ServiceCategory(name="Carpentry", description="Woodwork, furniture repairs, and custom woodworking services"),
-            ServiceCategory(name="Painting", description="Interior and exterior painting services for homes and businesses"),
-            ServiceCategory(name="Landscaping", description="Garden maintenance, lawn care, and landscaping design services"),
-            ServiceCategory(name="HVAC", description="Heating, ventilation, and air conditioning installation and repairs")
-        ]
-        db.session.add_all(categories)
-        db.session.commit()
-        app.logger.info(f'Added {len(categories)} initial service categories')
+    with app.app_context():
+        db.create_all()
+        
+        # Add initial service categories if none exist
+        if ServiceCategory.query.count() == 0:
+            app.logger.info('Adding initial service categories')
+            categories = [
+                ServiceCategory(name="Plumbing", description="All plumbing services including repairs, installations, and maintenance"),
+                ServiceCategory(name="Electrical", description="Electrical repairs, installations, and maintenance services"),
+                ServiceCategory(name="Cleaning", description="Professional home cleaning services including regular cleaning, deep cleaning, and specialized cleaning"),
+                ServiceCategory(name="Carpentry", description="Woodwork, furniture repairs, and custom woodworking services"),
+                ServiceCategory(name="Painting", description="Interior and exterior painting services for homes and businesses"),
+                ServiceCategory(name="Landscaping", description="Garden maintenance, lawn care, and landscaping design services"),
+                ServiceCategory(name="HVAC", description="Heating, ventilation, and air conditioning installation and repairs")
+            ]
+            db.session.add_all(categories)
+            db.session.commit()
+            app.logger.info(f'Added {len(categories)} initial service categories')
+
+# Initialize database
+init_db()
 
 # Register blueprints
 from routes import main_bp, customer_bp, provider_bp, service_bp, booking_bp, payment_bp
