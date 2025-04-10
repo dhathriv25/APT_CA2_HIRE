@@ -1,5 +1,5 @@
 from datetime import datetime
-from app import db
+from db_setup import db 
 
 class Customer(db.Model):
     """Customer model"""
@@ -25,6 +25,7 @@ class Customer(db.Model):
     
     def __repr__(self):
         return f"<Customer {self.email}>"
+
 
 class Provider(db.Model):
     """Provider model"""

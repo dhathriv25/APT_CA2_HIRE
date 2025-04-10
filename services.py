@@ -296,7 +296,7 @@ def verify_otp(user_id, entered_otp, user_type='customer'):
     
     # Mark OTP as used
     otp_record.is_used = True
-    from app import db
+    from db_setup import db
     db.session.commit()
     
     logger.info(f"OTP verified successfully for {user_type} {user_id}")
@@ -362,7 +362,7 @@ def update_provider_rating(provider_id):
         count: Number of ratings used to calculate average
     """
     from models import Provider, Booking
-    from app import db
+    from db_setup import db
     
     logger.info(f"Updating average rating for provider {provider_id}")
     
@@ -502,7 +502,7 @@ def cancel_booking(booking_id, cancel_reason=None):
         error: Error message if cancellation failed, None otherwise
     """
     from models import Booking, Payment
-    from app import db
+    from db_setup import db
     
     logger.info(f"Cancelling booking {booking_id}")
     
@@ -577,7 +577,7 @@ def validate_booking_data(data):
         errors['booking_date'] = "Invalid date format (use YYYY-MM-DD)"
     
     # Validate time slot format
-    time_slot_pattern = r'^\d{2}:\d{2}-\d{2}:\d{2}$'
+    time_slot_pattern = r'^\d{2}:\d{2}-\d{2}:\d{2}'
     import re
     if not re.match(time_slot_pattern, data['time_slot']):
         errors['time_slot'] = "Invalid time slot format (use HH:MM-HH:MM)"

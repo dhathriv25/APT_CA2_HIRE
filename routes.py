@@ -5,9 +5,15 @@ from datetime import datetime, timedelta
 import random
 import requests
 
-from app import db
-from models import Customer, Provider, ServiceCategory, ProviderCategory, Address, Booking, Payment, OTPVerification
-from services import find_matching_providers, calculate_distance, verify_otp, generate_otp
+from db_setup import db
+from models import (
+    Customer, Provider, ServiceCategory, ProviderCategory, 
+    Address, Booking, Payment, OTPVerification
+)
+from services import (
+    find_matching_providers, calculate_distance, 
+    verify_otp, generate_otp
+)
 
 # Create blueprints for different sections of the application
 main_bp = Blueprint('main', __name__)
