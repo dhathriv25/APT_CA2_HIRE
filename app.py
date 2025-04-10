@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 import logging
 from logging.handlers import RotatingFileHandler
+from db_setup import app, db
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
