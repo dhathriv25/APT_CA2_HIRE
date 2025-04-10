@@ -577,7 +577,7 @@ def validate_booking_data(data):
         errors['booking_date'] = "Invalid date format (use YYYY-MM-DD)"
     
     # Validate time slot format
-    time_slot_pattern = r'^\d{2}:\d{2}-\d{2}:\d{2}
+    time_slot_pattern = r'^\d{2}:\d{2}-\d{2}:\d{2}$'
     import re
     if not re.match(time_slot_pattern, data['time_slot']):
         errors['time_slot'] = "Invalid time slot format (use HH:MM-HH:MM)"
