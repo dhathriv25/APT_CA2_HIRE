@@ -1,4 +1,4 @@
-2025-04-10 15:17:37,505 ERROR: Exception on / [GET] [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py:875]
+2025-04-10 15:20:08,363 ERROR: Exception on /customer/register [GET] [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py:875]
 Traceback (most recent call last):
   File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
     response = self.full_dispatch_request()
@@ -9,8 +9,8 @@ Traceback (most recent call last):
   File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\routes.py", line 48, in index
-    return render_template('index.html', categories=categories, top_providers=top_providers, user=get_current_user())
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\routes.py", line 217, in register
+    return render_template('customer/register.html')
   File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\templating.py", line 150, in render_template
     return _render(app, template, context)
   File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\templating.py", line 131, in _render
@@ -20,14 +20,14 @@ Traceback (most recent call last):
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
   File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
     raise rewrite_traceback_stack(source=source)
-  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\templates\index.html", line 1, in top-level template code
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\templates\customer\register.html", line 1, in top-level template code
     {% extends "base.html" %}
   File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\templates\base.html", line 81, in top-level template code
     {% block content %}{% endblock %}
     ^^^^^^^^^^^^^^^^^
-  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\templates\index.html", line 13, in block 'content'
-    <a href="{{ url_for('service_list') }}" class="btn btn-primary btn-lg px-4 me-md-2">Find Services</a>
-    ^^^^^^^^^^^^^
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\templates\customer\register.html", line 13, in block 'content'
+    <form action="{{ url_for('customer_register') }}" method="post">
+    ^^^^^^^^^
   File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py", line 1121, in url_for
     return self.handle_url_build_error(error, endpoint, values)
            ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -39,11 +39,9 @@ Traceback (most recent call last):
     )
   File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
     raise BuildError(endpoint, values, method, self)
-werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'service_list'. Did you mean 'service.service_list' instead?
-2025-04-10 15:17:37,527 ERROR: 500 error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:88]
-2025-04-10 15:19:15,045 INFO: HIRE Platform startup [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:32]
-2025-04-10 15:19:15,073 INFO: Creating database tables [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:44]
-2025-04-10 15:19:19,128 ERROR: Exception on / [GET] [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py:875]
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'customer_register'. Did you mean 'customer.register' instead?
+2025-04-10 15:20:08,377 ERROR: 500 error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:88]
+2025-04-10 15:20:09,383 ERROR: Exception on /provider/register [GET] [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py:875]
 Traceback (most recent call last):
   File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
     response = self.full_dispatch_request()
@@ -54,25 +52,37 @@ Traceback (most recent call last):
   File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\routes.py", line 48, in index
-    return render_template('main.index', categories=categories, top_providers=top_providers, user=get_current_user())
-  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\templating.py", line 149, in render_template
-    template = app.jinja_env.get_or_select_template(template_name_or_list)
-  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
-    return self.get_template(template_name_or_list, parent, globals)
-           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\jinja2\environment.py", line 1016, in get_template
-    return self._load_template(name, globals)
-           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
-  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\jinja2\environment.py", line 975, in _load_template
-    template = self.loader.load(self, name, self.make_globals(globals))
-  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\jinja2\loaders.py", line 126, in load
-    source, filename, uptodate = self.get_source(environment, name)
-                                 ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
-  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\templating.py", line 65, in get_source
-    return self._get_source_fast(environment, template)
-           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\templating.py", line 99, in _get_source_fast
-    raise TemplateNotFound(template)
-jinja2.exceptions.TemplateNotFound: main.index
-2025-04-10 15:19:19,138 ERROR: 500 error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:88]
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\routes.py", line 385, in register
+    return render_template('provider/register.html')
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\templating.py", line 150, in render_template
+    return _render(app, template, context)
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\templating.py", line 131, in _render
+    rv = template.render(context)
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\templates\provider\register.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\templates\base.html", line 81, in top-level template code
+    {% block content %}{% endblock %}
+    ^^^^^^^^^^^^^^^^^
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\templates\provider\register.html", line 13, in block 'content'
+    <form action="{{ url_for('provider_register') }}" method="post">
+    ^^^^^^^^^
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py", line 1121, in url_for
+    return self.handle_url_build_error(error, endpoint, values)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\flask\app.py", line 1110, in url_for
+    rv = url_adapter.build(  # type: ignore[union-attr]
+        endpoint,
+    ...<3 lines>...
+        force_external=_external,
+    )
+  File "D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\venv\Lib\site-packages\werkzeug\routing\map.py", line 924, in build
+    raise BuildError(endpoint, values, method, self)
+werkzeug.routing.exceptions.BuildError: Could not build url for endpoint 'provider_register'. Did you mean 'provider.register' instead?
+2025-04-10 15:20:09,390 ERROR: 500 error: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application. [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:88]
+2025-04-10 15:22:39,743 INFO: HIRE Platform startup [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:32]
+2025-04-10 15:22:39,776 INFO: Creating database tables [in D:\DBS\Semester 1\Advance Programming Techniques\CA\CA-2\APT_CA2_HIRE\app.py:44]

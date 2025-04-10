@@ -477,10 +477,8 @@ def add_service():
 # Service routes
 @service_bp.route('/')
 def service_list():
-    """List all service categories"""
     categories = ServiceCategory.query.all()
-    user = get_current_user()
-    return render_template('services/list.html', categories=categories, user=user)
+    return render_template('services/list.html', categories=categories, user=get_current_user())
 
 @service_bp.route('/<int:category_id>')
 def service_detail(category_id):

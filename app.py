@@ -70,12 +70,13 @@ from routes import (
     service_bp, booking_bp, payment_bp
 )
 
+# Register blueprints with their prefixes
 app.register_blueprint(main_bp)
-app.register_blueprint(customer_bp)
-app.register_blueprint(provider_bp)
-app.register_blueprint(service_bp)
-app.register_blueprint(booking_bp)
-app.register_blueprint(payment_bp)
+app.register_blueprint(customer_bp, url_prefix='/customer')
+app.register_blueprint(provider_bp, url_prefix='/provider')
+app.register_blueprint(service_bp, url_prefix='/services')
+app.register_blueprint(booking_bp, url_prefix='/booking')
+app.register_blueprint(payment_bp, url_prefix='/payment')
 
 # Error handlers
 @app.errorhandler(404)
