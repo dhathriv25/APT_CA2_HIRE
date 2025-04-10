@@ -1,121 +1,35 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Customer Login{% endblock %}
 
 {% block content %}
-<div class="row mb-5">
-    <div class="col-md-8 offset-md-2 text-center">
-        <h1 class="display-4 mb-4">Welcome to HIRE Platform</h1>
-        <p class="lead">Connecting residential service customers with qualified service providers</p>
-        <p class="mb-4">Find trusted professionals for all your household maintenance needs</p>
-        
-        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-            <a href="{{ url_for('service_list') }}" class="btn btn-primary btn-lg px-4 me-md-2">Find Services</a>
-            {% if not user %}
-                <a href="{{ url_for('customer_register') }}" class="btn btn-outline-secondary btn-lg px-4">Register</a>
-            {% endif %}
-        </div>
-    </div>
-</div>
-
-<!-- Service Categories Section -->
-<div class="row mb-5">
-    <div class="col-12 text-center mb-4">
-        <h2>Our Services</h2>
-        <p class="text-muted">Explore our wide range of professional home services</p>
-    </div>
-    
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for category in categories %}
-        <div class="col">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">{{ category.name }}</h5>
-                    <p class="card-text">{{ category.description }}</p>
-                    <a href="{{ url_for('service_detail', category_id=category.id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
-                </div>
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4 class="card-title mb-0">Customer Login</h4>
             </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-
-<!-- Top Providers Section -->
-{% if top_providers %}
-<div class="row mb-5">
-    <div class="col-12 text-center mb-4">
-        <h2>Top Rated Service Providers</h2>
-        <p class="text-muted">Meet our highest-rated professionals</p>
-    </div>
-    
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for provider in top_providers %}
-        <div class="col">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">{{ provider.get_full_name() }}</h5>
-                    <p class="card-text">
-                        <strong>Rating:</strong> 
-                        {% for i in range(5) %}
-                            {% if i < provider.avg_rating|int %}
-                                <span class="text-warning">★</span>
-                            {% elif i < provider.avg_rating|round(0, 'ceil')|int and (provider.avg_rating % 1) >= 0.5 %}
-                                <span class="text-warning">★</span>
-                            {% else %}
-                                <span class="text-secondary">★</span>
-                            {% endif %}
-                        {% endfor %}
-                        ({{ provider.avg_rating }})
-                    </p>
-                    <p class="card-text"><strong>Experience:</strong> {{ provider.experience_years }} years</p>
-                    <a href="{{ url_for('service_list') }}" class="btn btn-sm btn-outline-primary">View Services</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-{% endif %}
-
-<!-- How It Works Section -->
-<div class="row mb-5">
-    <div class="col-12 text-center mb-4">
-        <h2>How It Works</h2>
-        <p class="text-muted">Simple steps to get the help you need</p>
-    </div>
-    
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-            <div class="card h-100 border-0">
-                <div class="card-body text-center">
-                    <div class="bg-light rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                        <h3 class="m-0">1</h3>
+            <div class="card-body">
+                <form action="{{ url_for('customer.login') }}" method="post">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
                     </div>
-                    <h5 class="card-title">Choose a Service</h5>
-                    <p class="card-text">Browse through our categories and select the service you need</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100 border-0">
-                <div class="card-body text-center">
-                    <div class="bg-light rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                        <h3 class="m-0">2</h3>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
                     </div>
-                    <h5 class="card-title">Book a Provider</h5>
-                    <p class="card-text">Select a time slot and book your preferred service provider</p>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card h-100 border-0">
-                <div class="card-body text-center">
-                    <div class="bg-light rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
-                        <h3 class="m-0">3</h3>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">Remember me</label>
                     </div>
-                    <h5 class="card-title">Get it Done</h5>
-                    <p class="card-text">Sit back and relax while our professionals take care of your needs</p>
-                </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <p class="mb-0">Don't have an account? <a href="{{ url_for('customer.register') }}">Register here</a></p>
             </div>
         </div>
     </div>

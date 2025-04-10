@@ -212,7 +212,7 @@ def register():
         session['temp_user_type'] = 'customer'
         
         flash('Account created! Verification code sent to your phone.', 'success')
-        return redirect(url_for('main.verify_otp_route'))
+        return redirect(url_for('main.verify_otp'))
     
     return render_template('customer/register.html')
 
@@ -380,7 +380,7 @@ def register():
         session['temp_user_type'] = 'provider'
         
         flash('Account created! Verification code sent to your phone.', 'success')
-        return redirect(url_for('main.verify_otp_route'))
+        return redirect(url_for('main.verify_otp'))
     
     return render_template('provider/register.html')
 

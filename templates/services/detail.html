@@ -85,7 +85,7 @@
                         {% if user and session.get('user_type') == 'customer' %}
                             <a href="{{ url_for('create_booking', provider_id=provider.id) }}?category_id={{ category.id }}" class="btn btn-primary">Book Now</a>
                         {% else %}
-                            <a href="{{ url_for('customer_login') }}" class="btn btn-outline-primary">Login to Book</a>
+                            <a href="{{ url_for('customer.login') }}" class="btn btn-outline-primary">Login to Book</a>
                         {% endif %}
                     </div>
                 </div>

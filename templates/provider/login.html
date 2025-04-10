@@ -10,7 +10,7 @@
                 <h4 class="card-title mb-0">Provider Login</h4>
             </div>
             <div class="card-body">
-                <form action="{{ url_for('provider_login') }}" method="post">
+                <form action="{{ url_for('provider.login') }}" method="post">
                     <div class="mb-3">
                         <label for="email" class="form-label">Email Address</label>
                         <input type="email" class="form-control" id="email" name="email" required>
@@ -29,7 +29,7 @@
                 </form>
             </div>
             <div class="card-footer text-center">
-                <p class="mb-0">Don't have an account? <a href="{{ url_for('provider_register') }}">Register as a Provider</a></p>
+                <p class="mb-0">Don't have an account? <a href="{{ url_for('provider.register') }}">Register as a Provider</a></p>
             </div>
         </div>
     </div>

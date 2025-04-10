@@ -10,35 +10,14 @@
         <p class="mb-4">Find trusted professionals for all your household maintenance needs</p>
         
         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-            <a href="{{ url_for('service_list') }}" class="btn btn-primary btn-lg px-4 me-md-2">Find Services</a>
+            <a href="{{ url_for('service.service_list') }}" class="btn btn-primary btn-lg px-4 me-md-2">Find Services</a>
             {% if not user %}
-                <a href="{{ url_for('customer_register') }}" class="btn btn-outline-secondary btn-lg px-4">Register</a>
+                <a href="{{ url_for('customer.register') }}" class="btn btn-outline-secondary btn-lg px-4">Register</a>
             {% endif %}
         </div>
     </div>
 </div>
 
-<!-- Service Categories Section -->
-<div class="row mb-5">
-    <div class="col-12 text-center mb-4">
-        <h2>Our Services</h2>
-        <p class="text-muted">Explore our wide range of professional home services</p>
-    </div>
-    
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for category in categories %}
-        <div class="col">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">{{ category.name }}</h5>
-                    <p class="card-text">{{ category.description }}</p>
-                    <a href="{{ url_for('service_detail', category_id=category.id) }}" class="btn btn-sm btn-outline-primary">View Details</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
 
 <!-- Top Providers Section -->
 {% if top_providers %}
@@ -68,7 +47,7 @@
                         ({{ provider.avg_rating }})
                     </p>
                     <p class="card-text"><strong>Experience:</strong> {{ provider.experience_years }} years</p>
-                    <a href="{{ url_for('service_list') }}" class="btn btn-sm btn-outline-primary">View Services</a>
+                    <a href="{{ url_for('service.service_list') }}" class="btn btn-sm btn-outline-primary">View Services</a>
                 </div>
             </div>
         </div>
