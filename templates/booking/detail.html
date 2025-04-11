@@ -10,9 +10,9 @@
     </div>
     <div class="col-md-4 text-end">
         {% if session.get('user_type') == 'customer' %}
-            <a href="{{ url_for('customer_dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+            <a href="{{ url_for('customer.dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
         {% elif session.get('user_type') == 'provider' %}
-            <a href="{{ url_for('provider_dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+            <a href="{{ url_for('provider.dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
         {% endif %}
     </div>
 </div>
@@ -100,16 +100,16 @@
                 
                 {% if booking.status in ['pending', 'confirmed'] %}
                     <div class="d-flex justify-content-end mt-3">
-                        <form action="{{ url_for('cancel_booking', booking_id=booking.id) }}" method="post" onsubmit="return confirm('Are you sure you want to cancel this booking?');" class="me-2">
+                        <form action="{{ url_for('booking.cancel_booking', booking_id=booking.id) }}" method="post" onsubmit="return confirm('Are you sure you want to cancel this booking?');" class="me-2">
                             <button type="submit" class="btn btn-danger">Cancel Booking</button>
                         </form>
                         
                         {% if booking.status == 'pending' and not booking.payment and session.get('user_type') == 'customer' %}
-                            <a href="{{ url_for('payment_process', booking_id=booking.id) }}" class="btn btn-primary">Pay Now</a>
+                            <a href="{{ url_for('payment.process', booking_id=booking.id) }}" class="btn btn-primary">Pay Now</a>
                         {% endif %}
                         
                         {% if booking.status == 'confirmed' and session.get('user_type') == 'provider' %}
-                            <form action="{{ url_for('complete_booking', booking_id=booking.id) }}" method="post" onsubmit="return confirm('Are you sure this service has been completed?');">
+                            <form action="{{ url_for('booking.complete_booking', booking_id=booking.id) }}" method="post" onsubmit="return confirm('Are you sure this service has been completed?');">
                                 <button type="submit" class="btn btn-success">Mark as Completed</button>
                             </form>
                         {% endif %}
@@ -124,7 +124,7 @@
                     <h5 class="card-title mb-0">Rate this Service</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ url_for('rate_booking', booking_id=booking.id) }}" method="post">
+                    <form action="{{ url_for('booking.rate_booking', booking_id=booking.id) }}" method="post">
                         <div class="mb-3">
                             <label class="form-label">Rating</label>
                             <div class="rating">

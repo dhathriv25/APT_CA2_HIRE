@@ -9,7 +9,7 @@
         <p class="text-muted">Manage your bookings, services, and account details here.</p>
     </div>
     <div class="col-md-4 text-end">
-        <a href="{{ url_for('add_provider_service') }}" class="btn btn-primary">Add New Service</a>
+        <a href="{{ url_for('provider.add_service') }}" class="btn btn-primary">Add New Service</a>
         
         {% if provider.is_available %}
             <form action="#" method="post" class="d-inline">
@@ -78,16 +78,16 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group btn-group-sm">
-                                                        <a href="{{ url_for('booking_detail', booking_id=booking.id) }}" class="btn btn-outline-primary">View</a>
+                                                        <a href="{{ url_for('booking.booking_detail', booking_id=booking.id) }}" class="btn btn-outline-primary">View</a>
                                                         
                                                         {% if booking.status in ['pending', 'confirmed'] %}
-                                                            <form action="{{ url_for('cancel_booking', booking_id=booking.id) }}" method="post" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                                                            <form action="{{ url_for('booking.cancel_booking', booking_id=booking.id) }}" method="post" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
                                                                 <button type="submit" class="btn btn-outline-danger">Cancel</button>
                                                             </form>
                                                         {% endif %}
                                                         
                                                         {% if booking.status == 'confirmed' %}
-                                                            <form action="{{ url_for('complete_booking', booking_id=booking.id) }}" method="post" onsubmit="return confirm('Are you sure the service is completed?');">
+                                                            <form action="{{ url_for('booking.complete_booking', booking_id=booking.id) }}" method="post" onsubmit="return confirm('Are you sure the service is completed?');">
                                                                 <button type="submit" class="btn btn-outline-success">Mark Completed</button>
                                                             </form>
                                                         {% endif %}
@@ -112,7 +112,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">My Services</h5>
-                        <a href="{{ url_for('add_provider_service') }}" class="btn btn-sm btn-primary">Add New Service</a>
+                        <a href="{{ url_for('provider.add_service') }}" class="btn btn-sm btn-primary">Add New Service</a>
                     </div>
                     <div class="card-body">
                         {% if services %}
@@ -146,7 +146,7 @@
                             </div>
                         {% else %}
                             <div class="alert alert-info mb-0">
-                                <p class="mb-0">You haven't added any services yet. <a href="{{ url_for('add_provider_service') }}">Add one now!</a></p>
+                                <p class="mb-0">You haven't added any services yet. <a href="{{ url_for('provider.add_service') }}">Add one now!</a></p>
                             </div>
                         {% endif %}
                     </div>

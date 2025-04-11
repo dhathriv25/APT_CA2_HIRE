@@ -10,7 +10,7 @@
                 <h4 class="card-title mb-0">Add New Address</h4>
             </div>
             <div class="card-body">
-                <form action="{{ url_for('add_address') }}" method="post">
+                <form action="{{ url_for('customer.add_address') }}" method="post">
                     <div class="mb-3">
                         <label for="address_line" class="form-label">Address Line</label>
                         <input type="text" class="form-control" id="address_line" name="address_line" required>
@@ -32,7 +32,7 @@
                     </div>
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">Save Address</button>
-                        <a href="{{ url_for('customer_dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+                        <a href="{{ url_for('customer.dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
                     </div>
                 </form>
             </div>

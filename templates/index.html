@@ -11,9 +11,7 @@
         
         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
             <a href="{{ url_for('service.service_list') }}" class="btn btn-primary btn-lg px-4 me-md-2">Find Services</a>
-            {% if not user %}
-                <a href="{{ url_for('customer.register') }}" class="btn btn-outline-secondary btn-lg px-4">Register</a>
-            {% endif %}
+            <a href="{{ url_for('customer.register') }}" class="btn btn-outline-secondary btn-lg px-4">Register</a>
         </div>
     </div>
 </div>
